@@ -16,6 +16,7 @@ const ChatInput = ({ onSend }) => {
       <TextField
         fullWidth
         size="small"
+        sx={{ mr: 2 }}
         placeholder="Enter your message"
         value={message}
         onChange={(e) => setMessage(e.target.value)}

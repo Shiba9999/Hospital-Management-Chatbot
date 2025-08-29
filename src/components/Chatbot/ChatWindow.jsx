@@ -19,18 +19,19 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
   return (
     <Paper
       elevation={6}
-      sx={{
-        width: 450,
-        height: 450,
-        position: "fixed",
-        bottom: 80,
-        right: 20,
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: 2,
-        overflow: "hidden",
-        zIndex: 1000,
-      }}
+      className="chat-window"
+      // sx={{
+      //   width: 450,
+      //   height: 450,
+      //   position: "fixed",
+      //   bottom: 80,
+      //   right: 20,
+      //   display: "flex",
+      //   flexDirection: "column",
+      //   borderRadius: 2,
+      //   overflow: "hidden",
+      //   zIndex: 1000,
+      // }}
     >
       {/* Header */}
       <Box
@@ -93,8 +94,11 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
           // Step 5: Slot list
           if (msg.type === "slot-list") {
             return (
-              <Box key={index} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              <Box
+                key={index}
+                sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+              >
+                <Typography variant="body2" mt={2} sx={{ fontWeight: "bold" }}>
                   {msg.reply}
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
@@ -123,7 +127,10 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
           // Step 6: Confirmation (Yes/No)
           if (msg.type === "confirm") {
             return (
-              <Box key={index} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Box
+                key={index}
+                sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+              >
                 <Typography variant="body2" sx={{ fontWeight: "bold" }}>
                   {msg.reply}
                 </Typography>
@@ -149,7 +156,7 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
             );
           }
 
-        // Default bubble
+          // Default bubble
           return <MessageBubble key={index} {...msg} />;
         })}
       </Box>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ChatbotButton from "./ChatbotButton";
 import ChatWindow from "./ChatWindow";
 import { sendMessageToChat } from "../../api/chatApi";
+import "/public/css/chatbot.css";
 
 // helpers
 const shortId = () => uuidv4().replace(/-/g, "").slice(0, 8);
@@ -68,13 +69,20 @@ const Chatbot = () => {
     if (!sessionId) {
       setMessages((prev) => [
         ...prev,
-        { text: "ℹ️ Session ended. Tap Reset to start a new chat.", sender: "bot" },
+        {
+          text: "ℹ️ Session ended. Tap Reset to start a new chat.",
+          sender: "bot",
+        },
       ]);
       return;
     }
 
     // Block manual typing when a click is expected
-    if (expecting === "doctor-choice" || expecting === "slot-choice" || expecting === "confirm") {
+    if (
+      expecting === "doctor-choice" ||
+      expecting === "slot-choice" ||
+      expecting === "confirm"
+    ) {
       setMessages((prev) => [
         ...prev,
         { text: "⚠️ Please choose from the options above.", sender: "bot" },
@@ -86,14 +94,20 @@ const Chatbot = () => {
     if (expecting === "name" && !isValidName(msg)) {
       setMessages((prev) => [
         ...prev,
-        { text: "⚠️ That doesn’t look like a valid name. Please enter only letters.", sender: "bot" },
+        {
+          text: "⚠️ That doesn’t look like a valid name. Please enter only letters.",
+          sender: "bot",
+        },
       ]);
       return;
     }
     if (expecting === "phone" && !isValidPhone(msg)) {
       setMessages((prev) => [
         ...prev,
-        { text: "⚠️ Please enter a valid phone number (10–13 digits, optional +).", sender: "bot" },
+        {
+          text: "⚠️ Please enter a valid phone number (10–13 digits, optional +).",
+          sender: "bot",
+        },
       ]);
       return;
     }
@@ -111,16 +125,24 @@ const Chatbot = () => {
             doctors: res.context.doctors,
             onDoctorSelect: async (choice) => {
               // user clicked a doctor card (1, 2, ...)
-            //   setMessages((prev2) => [
-            //     ...prev2,
-            //     { text: `Selected Doctor #${choice}`, sender: "user" },
-            //   ]);
-            const selectedDoctor = res.context.doctors.find((_, idx) => idx + 1 === choice);
-             setMessages((prev2) => [
+              //   setMessages((prev2) => [
+              //     ...prev2,
+              //     { text: `Selected Doctor #${choice}`, sender: "user" },
+              //   ]);
+              const selectedDoctor = res.context.doctors.find(
+                (_, idx) => idx + 1 === choice
+              );
+              setMessages((prev2) => [
                 ...prev2,
-                { text: `Selected Doctor ${selectedDoctor?.doctor_name}`, sender: "user" },
+                {
+                  text: `Selected Doctor ${selectedDoctor?.doctor_name}`,
+                  sender: "user",
+                },
               ]);
-              const doctorRes = await sendMessageToChat(sessionId, String(choice));
+              const doctorRes = await sendMessageToChat(
+                sessionId,
+                String(choice)
+              );
 
               // Step 5: show available slots (split by comma)
               if (
@@ -148,7 +170,10 @@ const Chatbot = () => {
                       await sendMessageToChat(sessionId, slot);
 
                       // Second call -> final_confirm
-                      const confirmRes = await sendMessageToChat(sessionId, slot);
+                      const confirmRes = await sendMessageToChat(
+                        sessionId,
+                        slot
+                      );
 
                       if (confirmRes?.stage === "final_confirm") {
                         setExpecting("confirm");
@@ -163,7 +188,10 @@ const Chatbot = () => {
                                 { text: `Selected: ${ans}`, sender: "user" },
                               ]);
 
-                              const finalRes = await sendMessageToChat(sessionId, ans);
+                              const finalRes = await sendMessageToChat(
+                                sessionId,
+                                ans
+                              );
                               if (finalRes?.reply) {
                                 setMessages((prev7) => [
                                   ...prev7,
@@ -198,7 +226,8 @@ const Chatbot = () => {
         setMessages((prev) => [...prev, { text: res.reply, sender: "bot" }]);
         setExpecting(stageToExpecting(res?.stage));
       }
-    } catch (e) {
+    } catch (error) {
+      console.log("Chatbot error:", error);
       setMessages((prev) => [
         ...prev,
         { text: "⚠️ Sorry, something went wrong.", sender: "bot" },
@@ -206,22 +235,25 @@ const Chatbot = () => {
     }
   };
 
+  useEffect(() => {
+    startChat();
+  }, []);
+
   return (
     <>
-      {open && (
-        <ChatWindow
-          onClose={() => {
-            setOpen(false);
-            // Reset when closing the window
-            resetSession();
-            setOpen(false);
-          }}
-          onReset={resetSession}
-          messages={messages}
-          onSend={handleSend}
-        />
-      )}
-      <ChatbotButton onClick={startChat} />
+      <ChatWindow
+        onClose={() => {
+          setOpen(false);
+          // Reset when closing the window
+          resetSession();
+          setOpen(false);
+        }}
+        onReset={resetSession}
+        messages={messages}
+        onSend={handleSend}
+      />
+
+      {/* <ChatbotButton onClick={startChat} /> */}
     </>
   );
 };
