@@ -58,6 +58,28 @@ const Chatbot = () => {
     setExpecting("done");
   };
 
+  const sendWithRetry = async (sessionId, msg, retries = 10, delay = 500) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await sendMessageToChat(sessionId, msg);
+      } catch (err) {
+        if (
+          err?.response?.status === 500 || // axios style
+          err?.status === 500 || // fetch style
+          err?.message?.includes("500")
+        ) {
+          console.warn(`Retry ${i + 1}/${retries} after 500 error`);
+          if (i < retries - 1) {
+            await new Promise((res) => setTimeout(res, delay));
+            continue; // retry
+          }
+        }
+        throw err; // other errors -> break immediately
+      }
+    }
+    throw new Error("Max retries reached");
+  };
+
   const handleSend = async (raw) => {
     const msg = (raw || "").trim();
     if (!msg) return;
@@ -113,7 +135,7 @@ const Chatbot = () => {
     }
 
     try {
-      const res = await sendMessageToChat(sessionId, msg);
+      const res = await sendWithRetry(sessionId, msg);
 
       // Step 4: doctor cards (do not show reply text here)
       if (res?.stage === "collect_time_preference" && res?.context?.doctors) {
@@ -139,7 +161,7 @@ const Chatbot = () => {
                   sender: "user",
                 },
               ]);
-              const doctorRes = await sendMessageToChat(
+              const doctorRes = await sendWithRetry(
                 sessionId,
                 String(choice)
               );
@@ -167,10 +189,10 @@ const Chatbot = () => {
                       ]);
 
                       // First API call returns "confirm_slot" message — skip showing it
-                      await sendMessageToChat(sessionId, slot);
+                      await sendWithRetry(sessionId, slot);
 
                       // Second call -> final_confirm
-                      const confirmRes = await sendMessageToChat(
+                      const confirmRes = await sendWithRetry(
                         sessionId,
                         slot
                       );
@@ -188,7 +210,7 @@ const Chatbot = () => {
                                 { text: `Selected: ${ans}`, sender: "user" },
                               ]);
 
-                              const finalRes = await sendMessageToChat(
+                              const finalRes = await sendWithRetry(
                                 sessionId,
                                 ans
                               );
