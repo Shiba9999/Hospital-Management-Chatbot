@@ -20,7 +20,7 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
     <Paper
       elevation={6}
       sx={{
-        width: 350,
+        width: 450,
         height: 450,
         position: "fixed",
         bottom: 80,
