@@ -51,9 +51,9 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
               <RestartAltIcon />
             </IconButton>
           </Tooltip>
-          <IconButton size="small" onClick={onClose} sx={{ color: "white" }}>
+          {/* <IconButton size="small" onClick={onClose} sx={{ color: "white" }}>
             <CloseIcon />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </Box>
 
