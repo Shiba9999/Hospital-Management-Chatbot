@@ -35,9 +35,10 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
     >
       {/* Header */}
       <Box
+        className="ai-header"
         sx={{
           p: 2,
-          bgcolor: "primary.main",
+          // bgcolor: "primary.main",
           color: "white",
           display: "flex",
           justifyContent: "space-between",

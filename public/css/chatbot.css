@@ -22,6 +22,18 @@
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
+.ai-header {
+  background-image: linear-gradient(-90deg, #cb6ce673 0%, #750096aa 100%);
+}
+.send-button {
+  color: #750096;
+  fill: #750096;
+  background-color: #750096;
+  border: 0;
+}
+.send-button svg {
+  fill: #750096;
+}
 .chat-window.open {
   opacity: 1;
   transform: translateY(0);

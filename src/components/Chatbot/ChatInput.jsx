@@ -22,7 +22,7 @@ const ChatInput = ({ onSend }) => {
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
       />
-      <IconButton color="primary" onClick={handleSend}>
+      <IconButton className="send-button" onClick={handleSend}>
         <SendIcon />
       </IconButton>
     </Box>

@@ -16,7 +16,7 @@ const MessageBubble = ({ text, sender }) => {
         sx={{
           p: 1.5,
           maxWidth: "75%",
-          bgcolor: isUser ? "primary.main" : "grey.200",
+          bgcolor: isUser ? "#cb6ce6" : "grey.200",
           color: isUser ? "white" : "black",
           borderRadius: 2,
         }}
