@@ -34,6 +34,10 @@
 .send-button svg {
   fill: #750096;
 }
+.send-button:focus,
+.mic-btn:focus {
+  outline: none;
+}
 .chat-window.open {
   opacity: 1;
   transform: translateY(0);

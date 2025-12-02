@@ -4,6 +4,7 @@ import ChatbotButton from "./ChatbotButton";
 import ChatWindow from "./ChatWindow";
 import { sendMessageToChat } from "../../api/chatApi";
 import "/public/css/chatbot.css";
+import "/public/css/typingBubble.css";
 
 // helpers
 const shortId = () => uuidv4().replace(/-/g, "").slice(0, 8);
@@ -39,6 +40,7 @@ const Chatbot = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState("");
+  const [loading, setLoading] = useState(false);
   const [expecting, setExpecting] = useState(null); // name | phone | problem | doctor-choice | slot-choice | confirm | done
 
   const resetSession = () => {
@@ -135,7 +137,10 @@ const Chatbot = () => {
     }
 
     try {
+      setLoading(true);
       const res = await sendWithRetry(sessionId, msg);
+
+      setLoading(false);
 
       // Step 4: doctor cards (do not show reply text here)
       if (res?.stage === "collect_time_preference" && res?.context?.doctors) {
@@ -161,10 +166,9 @@ const Chatbot = () => {
                   sender: "user",
                 },
               ]);
-              const doctorRes = await sendWithRetry(
-                sessionId,
-                String(choice)
-              );
+              setLoading(true);
+              const doctorRes = await sendWithRetry(sessionId, String(choice));
+              setLoading(false);
 
               // Step 5: show available slots (split by comma)
               if (
@@ -188,14 +192,13 @@ const Chatbot = () => {
                         { text: `Selected Slot: ${slot}`, sender: "user" },
                       ]);
 
+                      setLoading(true);
                       // First API call returns "confirm_slot" message — skip showing it
                       await sendWithRetry(sessionId, slot);
 
                       // Second call -> final_confirm
-                      const confirmRes = await sendWithRetry(
-                        sessionId,
-                        slot
-                      );
+                      const confirmRes = await sendWithRetry(sessionId, slot);
+                      setLoading(false);
 
                       if (confirmRes?.stage === "final_confirm") {
                         setExpecting("confirm");
@@ -209,11 +212,12 @@ const Chatbot = () => {
                                 ...prev6,
                                 { text: `Selected: ${ans}`, sender: "user" },
                               ]);
-
+                              setLoading(true);
                               const finalRes = await sendWithRetry(
                                 sessionId,
                                 ans
                               );
+                              setLoading(false);
                               if (finalRes?.reply) {
                                 setMessages((prev7) => [
                                   ...prev7,
@@ -250,6 +254,7 @@ const Chatbot = () => {
       }
     } catch (error) {
       console.log("Chatbot error:", error);
+      setLoading(false);
       setMessages((prev) => [
         ...prev,
         { text: "⚠️ Sorry, something went wrong.", sender: "bot" },
@@ -273,6 +278,7 @@ const Chatbot = () => {
         onReset={resetSession}
         messages={messages}
         onSend={handleSend}
+        isLoading={loading}
       />
 
       {/* <ChatbotButton onClick={startChat} /> */}

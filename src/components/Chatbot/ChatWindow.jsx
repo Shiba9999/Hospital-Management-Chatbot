@@ -14,8 +14,9 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import DoctorCard from "./DoctorCard";
+import TypingBubble from "./TypingBubble";
 
-const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
+const ChatWindow = ({ onClose, onReset, messages, onSend, isLoading }) => {
   return (
     <Paper
       elevation={6}
@@ -160,6 +161,8 @@ const ChatWindow = ({ onClose, onReset, messages, onSend }) => {
           // Default bubble
           return <MessageBubble key={index} {...msg} />;
         })}
+
+        {isLoading && <TypingBubble />}
       </Box>
 
       {/* Input */}
