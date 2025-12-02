@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: "widget.jsx",
+      entry: "widget.js",
       name: "HimsChatbot",
       fileName: "chatbot-widget",
       formats: ["iife"],

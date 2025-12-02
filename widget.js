@@ -6,7 +6,7 @@ class HimsChatbot extends HTMLElement {
   connectedCallback() {
     this.style.all = "unset"; // no shadow DOM
     const root = ReactDOM.createRoot(this);
-    root.render(<Chatbot />);
+    root.render(React.createElement(Chatbot));
   }
 }
 
