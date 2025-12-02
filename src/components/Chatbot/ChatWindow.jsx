@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -15,8 +15,10 @@ import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import DoctorCard from "./DoctorCard";
 import TypingBubble from "./TypingBubble";
+import Toast from "./Toast";
 
 const ChatWindow = ({ onClose, onReset, messages, onSend, isLoading }) => {
+  const [toastMessage, setToastMessage] = useState("");
   return (
     <Paper
       elevation={6}
@@ -35,6 +37,9 @@ const ChatWindow = ({ onClose, onReset, messages, onSend, isLoading }) => {
       // }}
     >
       {/* Header */}
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+      )}
       <Box
         className="ai-header"
         sx={{
@@ -166,7 +171,7 @@ const ChatWindow = ({ onClose, onReset, messages, onSend, isLoading }) => {
       </Box>
 
       {/* Input */}
-      <ChatInput onSend={onSend} />
+      <ChatInput onSend={onSend} setToastMessage={setToastMessage} />
     </Paper>
   );
 };

@@ -5,6 +5,7 @@ import ChatWindow from "./ChatWindow";
 import { sendMessageToChat } from "../../api/chatApi";
 import "/public/css/chatbot.css";
 import "/public/css/typingBubble.css";
+import "/public/css/toast.css";
 
 // helpers
 const shortId = () => uuidv4().replace(/-/g, "").slice(0, 8);

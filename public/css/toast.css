@@ -1,0 +1,28 @@
+.toast-container {
+  position: fixed;
+  bottom: 30px;
+  left: 20px;
+  z-index: 9999;
+  animation: slideIn 0.4s ease forwards;
+  cursor: pointer;
+}
+
+.toast-content {
+  background-image: linear-gradient(-90deg, #cb6ce673 0%, #750096 100%);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}

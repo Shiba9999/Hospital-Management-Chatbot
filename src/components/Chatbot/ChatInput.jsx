@@ -5,7 +5,7 @@ import SendIcon from "@mui/icons-material/Send";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 
-const ChatInput = ({ onSend }) => {
+const ChatInput = ({ onSend, setToastMessage }) => {
   const [message, setMessage] = useState("");
   const [recording, setRecording] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -42,6 +42,11 @@ const ChatInput = ({ onSend }) => {
     );
 
     const data = await res.json();
+    if (data.error) {
+      setToastMessage(data.error); // <-- SHOW POPUP
+      setLoading(false);
+      return;
+    }
     if (data.text) setMessage((prev) => prev + " " + data.text);
     setLoading(false);
   };
@@ -66,7 +71,7 @@ const ChatInput = ({ onSend }) => {
       {/* 🎤 MIC BUTTON */}
       <IconButton
         onClick={recording ? stopRecording : startRecording}
-        sx={{ color: "#750096",mx:1 }}
+        sx={{ color: "#750096", mx: 1 }}
         className="mic-btn"
       >
         {loading ? (
